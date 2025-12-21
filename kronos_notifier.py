@@ -5,29 +5,24 @@ Monitors gold prices and sends notifications via Telegram when conditions are me
 """
 
 import os
-import json
-from datetime import datetime
 import requests
-from telegram import Bot
-import asyncio
+from datetime import datetime
 
-def get_telegram_credentials():
-    """Get Telegram credentials from environment variables"""
-    bot_token = os.environ.get('TELEGRAM_BOT_TOKEN')
-    chat_id = os.environ.get('TELEGRAM_CHAT_ID')
-    
-    if not bot_token or not chat_id:
-        raise ValueError("Missing TELEGRAM_BOT_TOKEN or TELEGRAM_CHAT_ID environment variables")
-    
-    return bot_token, chat_id
-
-async def send_telegram_message(bot_token, chat_id, message):
-    """Send message to Telegram"""
+def send_telegram_message(bot_token, chat_id, message):
+    """Send message to Telegram using HTTP API"""
+    url = f"https://api.telegram.org/bot{bot_token}/sendMessage"
+    data = {
+        "chat_id": chat_id,
+        "text": message
+    }
     try:
-        bot = Bot(token=bot_token)
-        await bot.send_message(chat_id=chat_id, text=message)
-        print(f"✓ Message sent to {chat_id}")
-        return True
+        response = requests.post(url, data=data)
+        if response.status_code == 200:
+            print(f"✓ Message sent to {chat_id}")
+            return True
+        else:
+            print(f"✗ Error: {response.text}")
+            return False
     except Exception as e:
         print(f"✗ Error sending message: {e}")
         return False
@@ -54,14 +49,19 @@ def check_gold_price():
         print(f"Error checking gold price: {e}")
         return None
 
-async def main():
+def main():
     """Main function"""
     print("\n=== Kronos Gold Price Notifier ===")
     print(f"Started at: {datetime.now().isoformat()}")
     
     try:
         # Get Telegram credentials
-        bot_token, chat_id = get_telegram_credentials()
+        bot_token = os.environ.get('TELEGRAM_BOT_TOKEN')
+        chat_id = os.environ.get('TELEGRAM_CHAT_ID')
+        
+        if not bot_token or not chat_id:
+            print("Missing TELEGRAM_BOT_TOKEN or TELEGRAM_CHAT_ID environment variables")
+            return
         
         # Check gold price
         result = check_gold_price()
@@ -76,29 +76,11 @@ async def main():
         # If conditions are met, send notification
         if result['should_notify']:
             message = f"🔔 Gold Price Alert\n\n{result['message']}\nPrice: {result['price']}\nTime: {result['timestamp']}"
-            await send_telegram_message(bot_token, chat_id, message)
-        else:
-            print("No notification needed at this time")
+            send_telegram_message(bot_token, chat_id, message)
         
-        print("\n✓ Check completed successfully")
-        
-    except ValueError as e:
-        print(f"Configuration error: {e}")
-        await send_telegram_message(
-            os.environ.get('TELEGRAM_BOT_TOKEN'),
-            os.environ.get('TELEGRAM_CHAT_ID'),
-            f"❌ Kronos Notifier Error: {e}"
-        )
+        print("✓ Check completed successfully")
     except Exception as e:
         print(f"Error in main: {e}")
-        try:
-            await send_telegram_message(
-                os.environ.get('TELEGRAM_BOT_TOKEN'),
-                os.environ.get('TELEGRAM_CHAT_ID'),
-                f"❌ Kronos Notifier Error: {str(e)}"
-            )
-        except:
-            pass
 
 if __name__ == "__main__":
-    asyncio.run(main())
+    main()
