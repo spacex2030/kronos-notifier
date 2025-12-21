@@ -45,8 +45,8 @@ def check_gold_price():
         
         # For now, this is a placeholder
         return {
-            'price': 0,
-            'should_notify': False,
+            'price': 2650000,
+            'should_notify': True,
             'message': 'Gold price check completed',
             'timestamp': datetime.now().isoformat()
         }
@@ -81,7 +81,7 @@ async def main():
             print("No notification needed at this time")
         
         print("\n✓ Check completed successfully")
-    
+        
     except ValueError as e:
         print(f"Configuration error: {e}")
         await send_telegram_message(
