@@ -3,7 +3,7 @@ name: Kronos Gold Price Notifier
 on:
   schedule:
     # Run every hour
-    - cron: '0 * * * *'
+    - cron: '*/15 * * * *'
   workflow_dispatch:
 
 jobs:
