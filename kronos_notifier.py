@@ -497,8 +497,8 @@ def main():
         if not should_run_now():
         print("Not in scheduled 15-min window (needs minute divisible by 15 and second 5-15 sec).")
         return
-    print("\n=== Kronos Gold Price Notifier ===")print(f"Started at: {datetime.now().isoformat()}")
-
+    print(f"\n=== Kronos Gold Price Notifier ===")
+    print(f"Started at: {datetime.now().isoformat()}")
     bot_token = os.environ.get("TELEGRAM_BOT_TOKEN")
     chat_id = os.environ.get("TELEGRAM_CHAT_ID")
 
