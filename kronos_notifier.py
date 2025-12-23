@@ -495,8 +495,7 @@ def should_run_now():
 def main():
     # time.sleep(8)  # Disabled: timing check conflict
     if not should_run_now():
-        print("Not exact 15-min + 10sec Tehran time, exiting.")
-        return
+            print("Not in scheduled 15-min window (needs minute divisible by 15 and second 5-15 sec)."        return
     print("\n=== Kronos Gold Price Notifier ===")
     print(f"Started at: {datetime.now().isoformat()}")
 
