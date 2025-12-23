@@ -3,7 +3,7 @@ name: Kronos Gold Price Notifier
 on:
   schedule:
     # Run every hour
-    - cron: '*/15 * * * *'
+     - cron: '*/15 * * * *'  # هر ۱۵ دقیقه (UTC)
   workflow_dispatch:
 
 jobs:
