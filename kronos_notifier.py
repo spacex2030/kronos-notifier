@@ -493,7 +493,7 @@ def should_run_now():
     second = now_tehran.second
     return (minute % 15 == 0) and (5 <= second <= 15)
 def main():
-    time.sleep(8)
+    # time.sleep(8)  # Disabled: timing check conflict
     if not should_run_now():
         print("Not exact 15-min + 10sec Tehran time, exiting.")
         return
