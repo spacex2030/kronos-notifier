@@ -491,8 +491,7 @@ def should_run_now():
     now_tehran = datetime.now(tehran_tz)
     minute = now_tehran.minute
     second = now_tehran.second
-    return (minute % 15 == 0) and (second == 10)
-
+    return (minute % 15 == 0) and (5 <= second <= 15)
 def main():
     time.sleep(8)
     if not should_run_now():
