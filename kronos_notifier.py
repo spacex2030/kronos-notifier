@@ -11,6 +11,7 @@ import time
 import requests
 from datetime import datetime
 from bs4 import BeautifulSoup
+from zoneinfo import ZoneInfo  # Python 3.9+
 try:
     from selenium import webdriver
     from selenium.webdriver.common.by import By
@@ -485,8 +486,18 @@ def check_kronos_price():
         print(f"Error checking price: {e}")
         return None
 
+def should_run_now():
+    tehran_tz = ZoneInfo("Asia/Tehran")
+    now_tehran = datetime.now(tehran_tz)
+    minute = now_tehran.minute
+    second = now_tehran.second
+    return (minute % 15 == 0) and (second == 10)
 
 def main():
+    time.sleep(8)
+    if not should_run_now():
+        print("Not exact 15-min + 10sec Tehran time, exiting.")
+        return
     print("\n=== Kronos Gold Price Notifier ===")
     print(f"Started at: {datetime.now().isoformat()}")
 
