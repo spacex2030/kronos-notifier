@@ -504,7 +504,7 @@ def main():
 
     if not bot_token or not chat_id:
         print("Missing TELEGRAM_BOT_TOKEN or TELEGRAM_CHAT_ID")
-        return
+            return
 
     result = check_kronos_price()
     if not result:
